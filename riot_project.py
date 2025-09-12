@@ -17,11 +17,12 @@ def playerID_API():
     api_key = (os.getenv("riot_api_key"))
     base_player_id_url = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"
     url = f"{base_player_id_url}{game_name}/{tag}/?api_key={api_key}"
-    print(url)
+    
 
     response = rq.get(url)
     player_id = response.json()
     print(player_id)
+
 
 game_name, tag = account_info()
 playerID_API()
