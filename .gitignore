@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Python
 __pycache__/
 *.pyc
@@ -11,6 +11,6 @@ frontend/dist/
 
 # System files
 .DS_Store
-=======
+
 .env
->>>>>>> cde1cdbdbb9c59181a827cc658717f73b10fbc97
+
