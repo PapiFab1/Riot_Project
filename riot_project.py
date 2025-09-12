@@ -27,7 +27,7 @@ def playerID_API():
     puuid = player_id["puuid"]
     return puuid
 
-#return match ids for last 20 matches
+#return match ids for last 5 matches
 def match_ID_API(playerID):
     api_key = os.getenv("riot_api_key")
     base_url = "https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/"
@@ -35,24 +35,42 @@ def match_ID_API(playerID):
 
     response = rq.get(url)
     match_id = response.json()
-    print(match_id[:5])
     return match_id[:5]
 
    
 #only does one match at a time for now. Will need to update to iterate through 5 matches
-def player_stats_API(match_ID):
+def player_stats_API(match_ID, player_ID):
     api_key = os.getenv("riot_api_key")
     base_url = "https://americas.api.riotgames.com/lol/match/v5/matches/"
     url = f"{base_url}{match_ID}/?api_key={api_key}"
+
+    response = rq.get(url)
+    #turn response into a dictionary so it can be used
+    data = response.json()
+    participants = data["metadata"]["participants"]
+    player_index = participants.index(player_ID)
+    print(data["info"]["participants"][player_index]["summonerName"])
+    print(" ")
+    
+    c = data["info"]["participants"][player_index]["championName"]
+    k = data["info"]["participants"][player_index]["kills"]
+    d = data["info"]["participants"][player_index]["deaths"]
+    a = data["info"]["participants"][player_index]["assists"]
+
+    print(f"Champion: {c}")
+    print(f"Kills: {k}")
+    print(f"Deaths: {d}")
+    print(f"Assists: {a}\n")
 
 
 game_name, tag = account_info()
 playerID = playerID_API()
 match_ID = match_ID_API(playerID)
 
+for i in match_ID:
+    player_stats_API(i,playerID)
 
-for i in range(5):
-    player_stats_API(match_ID)
+
     
     
 
