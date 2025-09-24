@@ -3,6 +3,10 @@ import requests as rq
 import json
 from dotenv import load_dotenv
 import os
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
 
 #loading .env
 load_dotenv()
@@ -14,7 +18,7 @@ def account_info():
     return game_name,tag_name
     
 #grabs puuid from riot
-def playerID_API():
+def playerID_API(game_name,tag):
     api_key = os.getenv("riot_api_key")
     base_player_id_url = "https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"
     url = f"{base_player_id_url}{game_name}/{tag}/?api_key={api_key}"
@@ -74,40 +78,77 @@ def player_stats_API(match_ID, player_ID,data_dict):
 
 
 
-data_dict = {
+# data_dict = {
+#     "Champion": [],
+#     "Kills": [],
+#     "Deaths": [],
+#     "Assists": [],
+#     "Win":[]
+# }
+# game_name, tag = account_info()
+# playerID = playerID_API()
+# match_ID = match_ID_API(playerID)
+
+
+# for i in match_ID:
+#     player_stats_API(i,playerID,data_dict)
+
+# df = pd.DataFrame(data_dict)
+# df.index.name = "Game Number"
+# #calculates and adds KDA to dataframe
+# df["KDA"] = (df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1)
+# best_kda = df.loc[df["KDA"].idxmax()]
+# worst_kda = df.loc[df["KDA"].idxmin()]
+# most_used_champ = df["Champion"].mode()[0]
+
+# summary = {
+#     "Best KDA": best_kda["KDA"],
+#     "Best KDA Champion": best_kda["Champion"],
+#     "Worst KDA": worst_kda["KDA"],
+#     "Worst KDA Champion": worst_kda["Champion"],
+#     "Most Used Champion": most_used_champ
+# }
+
+
+
+@app.route('/getData')
+def getUserandTag():
+    user = request.form["Username","Tag"]
+    game_name, tag = account_info(user)
+    playerID = playerID_API(game_name,tag)
+    match_ID = match_ID_API(playerID)
+
+    data_dict = {
     "Champion": [],
     "Kills": [],
     "Deaths": [],
     "Assists": [],
     "Win":[]
-}
-game_name, tag = account_info()
-playerID = playerID_API()
-match_ID = match_ID_API(playerID)
+    }
+    
+    
+    for i in match_ID:
+        player_stats_API(i,playerID,data_dict)
 
-
-for i in match_ID:
-    player_stats_API(i,playerID,data_dict)
-
-df = pd.DataFrame(data_dict)
-df.index.name = "Game Number"
+    
+    df = pd.DataFrame(data_dict)
+    df.index.name = "Game Number"
 #calculates and adds KDA to dataframe
-df["KDA"] = (df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1)
-best_kda = df.loc[df["KDA"].idxmax()]
-worst_kda = df.loc[df["KDA"].idxmin()]
-most_used_champ = df["Champion"].mode()[0]
+    df["KDA"] = (df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1)
+    best_kda = df.loc[df["KDA"].idxmax()]
+    worst_kda = df.loc[df["KDA"].idxmin()]
+    most_used_champ = df["Champion"].mode()[0]
 
-summary = {
+    summary = {
     "Best KDA": best_kda["KDA"],
     "Best KDA Champion": best_kda["Champion"],
     "Worst KDA": worst_kda["KDA"],
     "Worst KDA Champion": worst_kda["Champion"],
     "Most Used Champion": most_used_champ
-}
+    }
 
-print(df)
-print(summary)
+    return print(game_name,tag)
     
-
-
-
+    
+if __name__ == '__main__':
+    app.run(debug=True)
