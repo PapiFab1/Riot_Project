@@ -20,8 +20,8 @@ This is a simple project that helped me expand my knowledge of **Python**, **API
 - Add css to make it look nicer.
 - Make it accessible outside of loclhost.
 
-##Getting Started
-#Prerequisites
+## Getting Started
+# Prerequisites
 - Riot Developer Portal API key (You can get a 24-hour one by signing up on this website "https://developer.riotgames.com/")
 - Python 3.x
   
