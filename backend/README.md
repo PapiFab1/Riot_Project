@@ -1,6 +1,6 @@
 # League Match Stats
 
-This is a simple project that helped me expand my knowledge of **Python, **API calls**, and **Flask**.
+This is a simple project that helped me expand my knowledge of **Python**, **API calls**, and **Flask**.
 
 ## Technologies Used
 - **Python**
