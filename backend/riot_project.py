@@ -4,17 +4,19 @@ import json
 from dotenv import load_dotenv
 import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, origins=["http://127.0.0.1:5500"])
 
 
 #loading .env
 load_dotenv()
 
 #for now a simple function that gets the player name and tag to make it more user friendly (will need to make this work for website) URLS ONLY WORK FOR NA
-def account_info():
-    game_name = input("Enter your account name: ")
-    tag_name = input("Enter your tag: ")
+def account_info(user,tagger):
+    game_name = user
+    tag_name = tagger
     return game_name,tag_name
     
 #grabs puuid from riot
@@ -111,10 +113,15 @@ def player_stats_API(match_ID, player_ID,data_dict):
 
 
 
-@app.route('/getData')
+@app.route('/', methods=["POST", "OPTIONS"])
 def getUserandTag():
-    user = request.form["Username","Tag"]
-    game_name, tag = account_info(user)
+    if request.method == "OPTIONS":
+        return {}, 200
+    
+    new_data = request.json
+    user = new_data.get("Username")
+    tagger = new_data.get("Tag")
+    game_name, tag = account_info(user,tagger)
     playerID = playerID_API(game_name,tag)
     match_ID = match_ID_API(playerID)
 
@@ -147,7 +154,8 @@ def getUserandTag():
     "Most Used Champion": most_used_champ
     }
 
-    return print(game_name,tag)
+    blank = df.to_dict(orient="records")
+    return jsonify(blank)
     
     
 if __name__ == '__main__':
