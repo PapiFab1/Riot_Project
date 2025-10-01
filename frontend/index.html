@@ -2,26 +2,41 @@
 <html>
   <head>
     <title>League Matches API</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display&display=swap"
+      rel="stylesheet"
+    />
     <script src="main.js" defer></script>
   </head>
   <body>
-    <h1>League Stats</h1>
-    <div>
-      <label class="userNameInput"
-        >Username:
-        <input type="text" id="Username" placeholder="Enter username here" />
-      </label>
-    </div>
-    <div>
-      <label class="userTagInput"
-        >Tag:
-        <input
-          type="text"
-          id="Tag"
-          placeholder="Enter tag here"
-        />
-        <input type="submit" onClick="getUser()" />
-      </label>
+    <div class="background-box">
+      <h1>League Stats</h1>
+      <div>
+        <div>
+          <label class="userNameInput"
+            >
+            <input
+              type="text"
+              id="Username"
+              placeholder="Username"
+            />
+          </label>
+        </div>
+        <div>
+          <label class="userTagInput"
+            >
+            <input type="text" id="Tag" placeholder="Tag" />
+          </label>
+        </div>
+        <div class="submit-button">
+          <input type="submit" id ="button" value="Get Stats" onClick="getUser()" />
+        </div>
+        <h2 id="load-thing"></h2>
+      </div>
+      <div>
+        <ul id="lists"></ul>
+      </div>
     </div>
   </body>
 </html>

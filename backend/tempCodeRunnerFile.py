@@ -1,1 +1,1 @@
- dataDict["Champion"].append(c)
+ChampionPic

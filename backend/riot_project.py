@@ -41,7 +41,7 @@ def match_ID_API(playerID):
 
     response = rq.get(url)
     match_id = response.json()
-    return match_id[:5]
+    return match_id[:15]
 
    
 #only does one match at a time for now. Will need to update to iterate through 5 matches
@@ -63,13 +63,7 @@ def player_stats_API(match_ID, player_ID,data_dict):
     d = data["info"]["participants"][player_index]["deaths"]
     a = data["info"]["participants"][player_index]["assists"]
     w = data["info"]["participants"][player_index]["win"]
-
-
-    # print(f"Champion: {c}")
-    # print(f"Kills: {k}")
-    # print(f"Deaths: {d}")
-    # print(f"Assists: {a}\n")
-    # dataDict["Champion"].appendd({"Champion":c,"Kills": k, "Deaths": d, "Assists": a})
+    champic = f"https://ddragon.leagueoflegends.com/cdn/15.19.1/img/champion/{c}.png"
 
     #puts data into dictionary
     data_dict["Champion"].append(c)
@@ -77,39 +71,7 @@ def player_stats_API(match_ID, player_ID,data_dict):
     data_dict["Deaths"].append(d)
     data_dict["Assists"].append(a)
     data_dict["Win"].append(w)
-
-
-
-# data_dict = {
-#     "Champion": [],
-#     "Kills": [],
-#     "Deaths": [],
-#     "Assists": [],
-#     "Win":[]
-# }
-# game_name, tag = account_info()
-# playerID = playerID_API()
-# match_ID = match_ID_API(playerID)
-
-
-# for i in match_ID:
-#     player_stats_API(i,playerID,data_dict)
-
-# df = pd.DataFrame(data_dict)
-# df.index.name = "Game Number"
-# #calculates and adds KDA to dataframe
-# df["KDA"] = (df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1)
-# best_kda = df.loc[df["KDA"].idxmax()]
-# worst_kda = df.loc[df["KDA"].idxmin()]
-# most_used_champ = df["Champion"].mode()[0]
-
-# summary = {
-#     "Best KDA": best_kda["KDA"],
-#     "Best KDA Champion": best_kda["Champion"],
-#     "Worst KDA": worst_kda["KDA"],
-#     "Worst KDA Champion": worst_kda["Champion"],
-#     "Most Used Champion": most_used_champ
-# }
+    data_dict["ChampionPic"].append(champic)
 
 
 
@@ -130,7 +92,8 @@ def getUserandTag():
     "Kills": [],
     "Deaths": [],
     "Assists": [],
-    "Win":[]
+    "Win":[],
+    "ChampionPic": []
     }
     
     
@@ -141,7 +104,7 @@ def getUserandTag():
     df = pd.DataFrame(data_dict)
     df.index.name = "Game Number"
 #calculates and adds KDA to dataframe
-    df["KDA"] = (df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1)
+    df["KDA"] = round((df["Kills"] + df["Assists"]) / df["Deaths"].replace(0, 1),1)
     best_kda = df.loc[df["KDA"].idxmax()]
     worst_kda = df.loc[df["KDA"].idxmin()]
     most_used_champ = df["Champion"].mode()[0]
@@ -155,7 +118,9 @@ def getUserandTag():
     }
 
     blank = df.to_dict(orient="records")
-    return jsonify(blank)
+    return jsonify({
+        "player": blank,
+        "summary": summary})
     
     
 if __name__ == '__main__':
