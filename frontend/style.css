@@ -111,8 +111,9 @@ h1 {
 .load-thing-class {
   z-index: 3;
   position: relative;
-  right: 43%;
-  bottom: 40%;
+  display: flex;
+  justify-content: center;
+  top: 50%;
   
 
 }

@@ -8,7 +8,6 @@ getUser = () => {
   const loading = document.getElementById("load-thing");
   loading.classList.add("load-thing-class");
   loading.textContent = "Loading...";
-  document.body.appendChild(loading);
 
   fetch("http://127.0.0.1:5000/", {
     method: "POST",
@@ -32,7 +31,7 @@ getUser = () => {
       });
 
       console.log(champions);
-      document.body.removeChild(loading);
+      loading.textContent = " ";
       let showChamps = document.getElementById("lists");
 
       const summary = document.createElement("p");
